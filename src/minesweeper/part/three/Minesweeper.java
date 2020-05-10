@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  *
  * @author epann
  */
-public class MinesweeperPartThree extends Application {
+public class Minesweeper extends Application {
     
     @Override
     public void start(Stage primaryStage) {
