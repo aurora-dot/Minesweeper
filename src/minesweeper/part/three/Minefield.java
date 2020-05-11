@@ -147,6 +147,22 @@ public class Minefield {
 		this.minefield[row][column].toggleMarked();
 
 	}
+        
+        public boolean isMarked(int row, int column) {
+            return this.minefield[row][column].isMarked();
+        }
+        
+        public int getMineNeighbour(int row, int column) {
+            return this.minefield[row][column].getMinedNeighbours();
+        }
+        
+        public boolean isRevealed(int row, int column) {
+            return this.minefield[row][column].isRevealed();
+        }
+        
+        public boolean isMined(int row, int column) {
+            return this.minefield[row][column].isMined();
+        }
 
 	private void checkReveal(int row, int column) {
 		// walk round the outside of the current tile
@@ -226,5 +242,4 @@ public class Minefield {
 	public MineTile getMineTile(int row, int col) {
 		return minefield[row][col];
 	}
-
 }

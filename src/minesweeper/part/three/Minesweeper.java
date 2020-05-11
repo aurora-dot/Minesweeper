@@ -6,9 +6,11 @@
 package minesweeper.part.three;
 import java.awt.Insets;
 import java.io.File;
+import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -16,6 +18,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -27,21 +30,27 @@ import javafx.stage.Stage;
  * @author 
  */
 public class Minesweeper extends Application {
-    Minefield mines;
+    GridPane grid;
+    Minefield minefield;
+    int rows = 10;
+    int columns = 15;
+    int mines = 20; 
     private TabPane tabPane = new TabPane();
     private FileChooser fileChooser = new FileChooser();
     private Stage stage;
     
     @Override
     public void start(Stage primaryStage) {   
-        this.mines = new Minefield(10, 15);
-        this.mines.populate(20);
+        this.minefield = new Minefield(rows, columns);
+        this.minefield.populate(mines);
         
         this.stage = primaryStage;
         BorderPane root = new BorderPane();
 
         root.setTop(createMenus());
-        root.setCenter(mineGrid());
+        
+        grid = mineGrid();
+        root.setCenter(grid);
         
         Scene scene = new Scene(root);
 
@@ -92,9 +101,50 @@ public class Minesweeper extends Application {
         System.out.println("Ass");
     }
     
-    private void refresh() {
+    private void revealMines() {
+        for (Node n : grid.getChildren()) {  
+            if (n instanceof MineButton) {
+                MineButton button = (MineButton)n;
+                int[] pos = button.getPosition();
+                
+                if (minefield.isMined(pos[0], pos[1])) {
+                    button.setText("m");
+                } else {
+                    button.setText(String.valueOf(minefield.getMineNeighbour(pos[0], pos[1])));
+                }
+            }
+        }
         
+        // TODO Make popup show
     }
+
+    
+    private void refresh() {
+        // loop through buttons setting text and checking if others are visable
+        for (Node n : grid.getChildren()) {
+            
+            if (n instanceof MineButton) {
+                MineButton button = (MineButton)n;
+                int[] pos = button.getPosition();
+
+                if (minefield.isRevealed(pos[0], pos[1])) {
+                    button.setDisable(true);
+
+                    if (minefield.isMined(pos[0], pos[1])) {
+                        button.setText("m");
+                    } else {
+                        button.setText(String.valueOf(minefield.getMineNeighbour(pos[0], pos[1])));
+                    }
+                } else if (minefield.isMarked(pos[0], pos[1])) {
+                    button.setText("h");
+                } else {
+                    button.setText(" ");
+                }
+            }
+        }
+    }
+        
+
 
     /**
      * @param args the command line arguments
@@ -106,14 +156,56 @@ public class Minesweeper extends Application {
     private GridPane mineGrid() {
         GridPane grid = new GridPane();
 
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 5; c++) {
-                Button button = new Button(String.valueOf(1));
+        
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                MineButton button = new MineButton(" ", r, c);       
+                
+                button.setOnMousePressed( e -> {
+                    if (e.getButton() == MouseButton.PRIMARY) {
+                        int[] p = button.getPosition();
+                        System.out.printf("Mouse LEFT clicked cell [%d, %d]%n", p[0], p[1]);
+                        
+                        if (!minefield.isMarked(p[0], p[1])) {
+                            boolean b = minefield.step(p[0], p[1]);
+                            System.out.println(b);
+                            if (b == true) {
+                                button.setText(String.valueOf(minefield.getMineNeighbour(p[0], p[1])));
+                                refresh();
+                            } else if (b == false) {
+                                button.setText("m");
+                                revealMines();
+                            }
+                            minefield.printMinefield();
+                            button.setDisable(true);
+                        }
+                        
+                        
+                    } else if (e.getButton() == MouseButton.SECONDARY) {
+                        int[] p = button.getPosition();
+                        System.out.printf("Mouse RIGHT clicked cell [%d, %d]%n", p[0], p[1]);
+                        
+                        if (!minefield.isMarked(p[0], p[1])) {
+                            button.setText("h");
+                            
+                            // TODO check if all mines and only the mines are marked, if so return success
+                            
+                        } else {
+                            button.setText(" ");
+                        }
+                        
+                        minefield.mark(p[0], p[1]);
+                    }
+                });
+                
+                
                 grid.add(button, c, r);
             }
         }
         
         return grid;
     }
+
+
     
 }
