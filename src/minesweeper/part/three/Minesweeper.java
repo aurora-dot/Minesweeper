@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package minesweeper.part.three;
-
+import java.awt.Insets;
 import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -17,27 +17,32 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
  *
- * @author epann
+ * @author 
  */
 public class Minesweeper extends Application {
-    
+    Minefield mines;
     private TabPane tabPane = new TabPane();
-    FileChooser fileChooser = new FileChooser();
-    Stage stage;
+    private FileChooser fileChooser = new FileChooser();
+    private Stage stage;
     
     @Override
-    public void start(Stage primaryStage) {    
+    public void start(Stage primaryStage) {   
+        this.mines = new Minefield(10, 15);
+        this.mines.populate(20);
+        
         this.stage = primaryStage;
         BorderPane root = new BorderPane();
 
         root.setTop(createMenus());
-
+        root.setCenter(mineGrid());
+        
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("Minesweeper");
@@ -65,7 +70,7 @@ public class Minesweeper extends Application {
         Menu gameMenu = new Menu("Game");
         
         MenuItem newItem = new MenuItem("New...");
-        openItem.setOnAction(e -> {
+        newItem.setOnAction(e -> {
             newGame();
         });
         
@@ -76,15 +81,19 @@ public class Minesweeper extends Application {
     }
     
     private void saveMinefield() {
-
+        System.out.println("Shit");
     }
         
     private void openMinefield() {
-
+        System.out.println("Fuck");
     }
     
     private void newGame() {
-
+        System.out.println("Ass");
+    }
+    
+    private void refresh() {
+        
     }
 
     /**
@@ -92,6 +101,19 @@ public class Minesweeper extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private GridPane mineGrid() {
+        GridPane grid = new GridPane();
+
+        for (int r = 0; r < 5; r++) {
+            for (int c = 0; c < 5; c++) {
+                Button button = new Button(String.valueOf(1));
+                grid.add(button, c, r);
+            }
+        }
+        
+        return grid;
     }
     
 }

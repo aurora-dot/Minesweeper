@@ -5,6 +5,8 @@
  */
 package minesweeper.part.three;
 
+import javafx.scene.control.Button;
+
 /**
  * @author  The refactored representation of a tile in the minefield. Note
  * that we use the unlisted no argument constructor, since we initialise all
