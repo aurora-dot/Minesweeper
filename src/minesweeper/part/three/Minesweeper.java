@@ -57,8 +57,10 @@ public class Minesweeper extends Application {
 
         mainBorderPane.setTop(createMenus());
         
+        mainBorderPane.setCenter(createButtonMenu());
+        
         grid = mineGrid();
-        mainBorderPane.setCenter(grid);
+        mainBorderPane.setBottom(grid);
         
         Scene scene = new Scene(mainBorderPane);
 
@@ -104,6 +106,58 @@ public class Minesweeper extends Application {
         
         menus.getMenus().addAll(fileMenu, gameMenu, debugMenu);
         return menus;
+    }
+    
+    private HBox createButtonMenu() {
+    Button easyButton = new Button("Easy");
+        Button mediumButton = new Button("Medium");
+        Button hardButton = new Button("Hard");
+        Button customButton = new Button("Custom");
+        
+        easyButton.setOnAction(e -> {
+            rows = 10;
+            columns = 15;
+            mines = 20;
+            
+            minefield = new Minefield(rows, columns);
+            minefield.populate(mines);
+                    
+            grid = mineGrid();
+            mainBorderPane.setBottom(grid);
+        });
+        
+        mediumButton.setOnAction(e -> {
+            rows = 20;
+            columns = 25;
+            mines = 50;
+            
+            minefield = new Minefield(rows, columns);
+            minefield.populate(mines);
+                    
+            grid = mineGrid();
+            mainBorderPane.setBottom(grid);
+        });
+        
+        hardButton.setOnAction(e -> {
+            rows = 30;
+            columns = 35;
+            mines = 100;
+            
+            minefield = new Minefield(rows, columns);
+            minefield.populate(mines);
+                    
+            grid = mineGrid();
+            mainBorderPane.setBottom(grid);
+        });
+        
+        customButton.setOnAction(e -> {
+            newGame();
+        });
+        
+        HBox buttonPane = new HBox();
+        buttonPane.getChildren().addAll(easyButton, mediumButton, hardButton, customButton);
+        
+        return buttonPane;
     }
     
     private void showMinefield() {
@@ -172,22 +226,7 @@ public class Minesweeper extends Application {
         
         //Creating a Text object 
         Text topText = new Text();
-        Text centerText = new Text();
-        Button newButton = new Button("New Game?");
-        Button quitButton = new Button("Quit");
-        
-        newButton.setOnAction(e -> {
-            popupStage.close();
-            newGamePopup();
-        });
-        
-        quitButton.setOnAction(e -> {
-            System.exit(0);
-        });
-        
-        HBox buttonPane = new HBox();
-        buttonPane.getChildren().addAll(newButton, quitButton);
-        
+        Text centerText = new Text();     
 
         if (success) {
             popupStage.setTitle("Success!");
@@ -203,9 +242,6 @@ public class Minesweeper extends Application {
         //Setting the top, bottom, center, right and left nodes to the pane 
         root.setTop(topText); // congrats text
         root.setCenter(centerText); // You won!
-        root.setBottom(buttonPane); // You won!
-
-        
         // new game
             
         popupStage.setScene(scene);
@@ -227,9 +263,7 @@ public class Minesweeper extends Application {
         
         fieldPane.getChildren().addAll();
         fieldPane.getChildren().addAll(new Label("Rows:"), entryRows, new Label("Columns:"),entryColumns,new Label("Mines:"),entryMines);
-        
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
+                
         Button goButton = new Button("Go!");
         goButton.setOnAction(e -> {            
             String regex = "\\d+";
@@ -247,8 +281,11 @@ public class Minesweeper extends Application {
                     columns = Integer.parseInt(c);
                     mines = Integer.parseInt(m);
                     
+                    minefield = new Minefield(rows, columns);
+                    minefield.populate(mines);
+                    
                     grid = mineGrid();
-                    mainBorderPane.setCenter(grid);
+                    mainBorderPane.setBottom(grid);
                     
                     popupStage.close();
                 
