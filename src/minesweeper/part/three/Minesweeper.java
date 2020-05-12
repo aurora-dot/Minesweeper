@@ -45,6 +45,7 @@ public class Minesweeper extends Application {
     private TabPane tabPane = new TabPane();
     private FileChooser fileChooser = new FileChooser();
     private Stage stage;
+    BorderPane mainBorderPane;
     
     @Override
     public void start(Stage primaryStage) {   
@@ -52,18 +53,18 @@ public class Minesweeper extends Application {
         this.minefield.populate(mines);
         
         this.stage = primaryStage;
-        BorderPane root = new BorderPane();
+        mainBorderPane = new BorderPane();
 
-        root.setTop(createMenus());
+        mainBorderPane.setTop(createMenus());
         
         grid = mineGrid();
-        root.setCenter(grid);
+        mainBorderPane.setCenter(grid);
         
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(mainBorderPane);
 
-        primaryStage.setTitle("Minesweeper");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setTitle("Minesweeper");
+        stage.setScene(scene);
+        stage.show();
  }
     
     private MenuBar createMenus() {
@@ -230,34 +231,37 @@ public class Minesweeper extends Application {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         
         Button goButton = new Button("Go!");
-        goButton.setOnAction(e -> {
-            // get contents of buttons and check if only int, if not show error, otherwise make game
-            // also check if too big and if mines are larger than the total of spaces avalible on the field
+        goButton.setOnAction(e -> {            
             String regex = "\\d+";
             
-            String rows = entryRows.getText();
-            String columns = entryColumns.getText();
-            String mines = entryMines.getText();
+            String r = entryRows.getText();
+            String c = entryColumns.getText();
+            String m = entryMines.getText();
             
-            if (rows.matches(regex) && columns.matches(regex) && mines.matches(regex)) {
+            if (r.matches(regex) && c.matches(regex) && m.matches(regex)) {
                 int totalSpaces;
-                totalSpaces = (Integer.parseInt(rows) * Integer.parseInt(columns)) - 1;
+                totalSpaces = (Integer.parseInt(r) * Integer.parseInt(c)) - 1;
                 
-                if (Integer.parseInt(mines) > totalSpaces) {
+                if (Integer.parseInt(m) <= totalSpaces) {
+                    rows = Integer.parseInt(r);
+                    columns = Integer.parseInt(c);
+                    mines = Integer.parseInt(m);
+                    
+                    grid = mineGrid();
+                    mainBorderPane.setCenter(grid);
+                    
+                    popupStage.close();
                 
                 } else {
-                    // error
+                    root.setTop(new Text("Error: Too many mines"));
                 }
             } else {
-                // error
+                root.setTop(new Text("Error: Please enter digits"));
             }
         });
         
-
         
         HBox buttonPane = new HBox();
-
-        
         
         buttonPane.getChildren().add(goButton);
         root.setBottom(buttonPane);
