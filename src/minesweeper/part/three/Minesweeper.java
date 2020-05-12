@@ -5,7 +5,13 @@
  */
 package minesweeper.part.three;
 import java.awt.Insets;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,7 +19,10 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -176,11 +185,48 @@ public class Minesweeper extends Application {
     }
     
     private void saveMinefield() {
-        System.out.println("Shit");
+        try {
+            fileChooser.setTitle("Save progress to file...");
+            FileChooser.ExtensionFilter extFilter
+                    = new FileChooser.ExtensionFilter("ser files (*.ser)", "*.ser");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File file = fileChooser.showSaveDialog(stage);
+            if (file != null) {
+                //minefield.save(file);
+                try {
+                    FileOutputStream fout = new FileOutputStream(file);
+                    ObjectOutputStream out = new ObjectOutputStream(fout);
+                    
+                    ArrayList<Minefield> data = new ArrayList<Minefield>();
+                    data.add(minefield);
+                    
+                    out.writeObject(data);
+                    out.close();
+                    fout.close();
+                    
+                    // TODO doesn't work, just do comma delim as it's easier
+
+                } catch (Exception ex) {
+                    Alert alert = new Alert(AlertType.ERROR, ex.toString(), ButtonType.OK);
+                    alert.showAndWait();
+                }
+
+            }
+        } catch (Exception ex) {
+            Alert alert = new Alert(AlertType.ERROR, ex.toString(), ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+
+    public void   SaveToFile() throws IOException {
+
     }
     
     private void openMinefield() {
         System.out.println("Fuck");
+        // set minefield to file
+        // set row and col
+        // show in grid
     }
     
     private void newGame() {
