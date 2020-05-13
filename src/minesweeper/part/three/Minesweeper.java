@@ -7,12 +7,16 @@ package minesweeper.part.three;
 import java.awt.Insets;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -192,24 +196,7 @@ public class Minesweeper extends Application {
             fileChooser.getExtensionFilters().add(extFilter);
             File file = fileChooser.showSaveDialog(stage);
             if (file != null) {
-                //minefield.save(file);
-                try {
-                    FileOutputStream fout = new FileOutputStream(file);
-                    ObjectOutputStream out = new ObjectOutputStream(fout);
-                    
-                    ArrayList<Minefield> data = new ArrayList<Minefield>();
-                    data.add(minefield);
-                    
-                    out.writeObject(data);
-                    out.close();
-                    fout.close();
-                    
-                    // TODO doesn't work, just do comma delim as it's easier
-
-                } catch (Exception ex) {
-                    Alert alert = new Alert(AlertType.ERROR, ex.toString(), ButtonType.OK);
-                    alert.showAndWait();
-                }
+                minefield.save(file);
 
             }
         } catch (Exception ex) {
@@ -218,15 +205,43 @@ public class Minesweeper extends Application {
         }
     }
 
-    public void   SaveToFile() throws IOException {
-
-    }
-    
-    private void openMinefield() {
-        System.out.println("Fuck");
-        // set minefield to file
-        // set row and col
-        // show in grid
+    public void openMinefield() {
+        try {
+            fileChooser.setTitle("Open progress file...");
+            FileChooser.ExtensionFilter extFilter
+                    = new FileChooser.ExtensionFilter("ser files (*.ser)", "*.ser");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File file = fileChooser.showOpenDialog(stage);
+            
+            for (Node n : grid.getChildren()) {
+                if (n instanceof MineButton) {
+                    MineButton button = (MineButton) n;
+                    button.setDisable(false);
+                }
+            }
+            
+            if (file != null) {
+                List<List<Object>> listOfLists;
+                FileInputStream fis = new FileInputStream(file);
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                
+                listOfLists = (List<List<Object>>) ois.readObject();
+                List<Object> dimentions = listOfLists.get(0);
+                
+                rows = (int) dimentions.get(0);
+                columns = (int) dimentions.get(1);
+                
+                minefield = new Minefield(rows, columns);
+                minefield.open(listOfLists);
+                
+                refresh();
+                
+                
+            }
+        } catch (Exception ex) {
+            Alert alert = new Alert(AlertType.ERROR, ex.toString(), ButtonType.OK);
+            alert.showAndWait();
+        }
     }
     
     private void newGame() {

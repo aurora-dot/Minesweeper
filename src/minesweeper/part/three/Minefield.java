@@ -105,25 +105,79 @@ public class Minefield implements Serializable {
         return s;
     }
     
-//    public void save(File f) throws Exception {
-//        try {
-//            FileOutputStream fout = new FileOutputStream(f);
-//            ObjectOutputStream oos = new ObjectOutputStream(fout);
-//            
-//            ArrayList<Minefield[][]> data = new ArrayList<Minefield[][]>();
-//            
-//            oos.writeObject(this);
-//            oos.close();
-//            fout.close();
-//            
-//
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
-//            alert.showAndWait();
-//        }
-//    }
+    public void save(File file) throws Exception {
+        List<List<Object>> listOfLists = new ArrayList<List<Object>>(); 
+        
+        ArrayList<Object> dimentions = new ArrayList<Object>();
+        dimentions.add(rows);
+        dimentions.add(columns);
+        listOfLists.add(dimentions);
+        
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < this.columns; j++) {
+                ArrayList<Object> data = new ArrayList<Object>();
+                MineTile m = minefield[i][j];
 
+                data.add(m.isMarked());
+                data.add(m.isMined());
+                data.add(m.isRevealed());
+                data.add(m.getMinedNeighbours());
+                
+                listOfLists.add(data);
+            }
+        }
+
+        try {      
+            FileOutputStream fout = new FileOutputStream(file);
+            ObjectOutputStream out = new ObjectOutputStream(fout);
+                    
+            out.writeObject(listOfLists);
+            out.close();
+            fout.close();
+            
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Saved Successfully", ButtonType.OK);
+            alert.showAndWait();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+
+    public void open(List<List<Object>> listOfLists) throws Exception {
+        listOfLists.remove(0);
+        int count = 0;
+        
+        try {
+            for (int i = 0; i < this.rows; i++) {
+                for (int j = 0; j < this.columns; j++) {
+                    List<Object> mineFields = listOfLists.get(count);
+
+                    if ((boolean) mineFields.get(0)) {
+                        minefield[i][j].toggleMarked();
+                    }
+
+                    if ((boolean) mineFields.get(1)) {
+                        minefield[i][j].toggleMined();
+                    }
+
+                    if ((boolean) mineFields.get(2)) {
+                        minefield[i][j].toggleRevealed();
+                    }
+
+                    minefield[i][j].setMinedNeighbours((int) mineFields.get(3));
+                    
+                    count++;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, ex.toString(), ButtonType.OK);
+            alert.showAndWait();
+        }
+    }
+    
     /**
      *
      * @return the minefield with everything on show

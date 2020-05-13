@@ -63,6 +63,10 @@ public class MineTile {
     public void incMinedNeighbours() {
         this.minedNeighbours++;
     }
+    
+    public void setMinedNeighbours(int i) {
+        minedNeighbours = i;
+    }
 
     /**
      *
