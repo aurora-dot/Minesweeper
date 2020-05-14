@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'Cousine';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Cousine Regular'), local('Cousine-Regular'), url(https://fonts.gstatic.com/s/cousine/v14/d6lIkaiiRdih4SpP_SkvzAbt.woff2) format('woff2');
+}
+
+.root {
+    -fx-background-color: #282a36;
+}
+
+.button {
+    -fx-background-color: #44475a;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+    
+    -fx-pref-height: 35px;
+    -fx-pref-width: 35px;
+    
+    -fx-font: normal bold 15px 'Cousine' 
+}

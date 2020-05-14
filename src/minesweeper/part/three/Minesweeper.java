@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package minesweeper.part.three;
+import java.awt.Image;
 import java.awt.Insets;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -35,6 +36,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -43,6 +49,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
 /**
@@ -76,7 +83,11 @@ public class Minesweeper extends Application {
         mainBorderPane.setBottom(grid);
         
         Scene scene = new Scene(mainBorderPane);
+        
+        scene.getStylesheets().add(getClass().getResource("style.css").toString());
 
+        //stage.setResizable(false);
+        stage.sizeToScene();
         stage.setTitle("Minesweeper");
         stage.setScene(scene);
         stage.show();
@@ -134,33 +145,36 @@ public class Minesweeper extends Application {
             
             minefield = new Minefield(rows, columns);
             minefield.populate(mines);
-                    
+            
             grid = mineGrid();
             mainBorderPane.setBottom(grid);
+            stage.sizeToScene();
         });
         
         mediumButton.setOnAction(e -> {
             rows = 20;
             columns = 25;
-            mines = 50;
+            mines = 75;
             
             minefield = new Minefield(rows, columns);
             minefield.populate(mines);
                     
             grid = mineGrid();
             mainBorderPane.setBottom(grid);
+            stage.sizeToScene();
         });
         
         hardButton.setOnAction(e -> {
             rows = 30;
             columns = 35;
-            mines = 100;
+            mines = 200;
             
             minefield = new Minefield(rows, columns);
             minefield.populate(mines);
                     
             grid = mineGrid();
             mainBorderPane.setBottom(grid);
+            stage.sizeToScene();
         });
         
         customButton.setOnAction(e -> {
@@ -214,11 +228,11 @@ public class Minesweeper extends Application {
             File file = fileChooser.showOpenDialog(stage);
             
             for (Node n : grid.getChildren()) {
-                if (n instanceof MineButton) {
-                    MineButton button = (MineButton) n;
-                    button.setDisable(false);
-                }
-            }
+                    if (n instanceof MineButton) {
+                        MineButton button = (MineButton) n;
+                        button.setDisable(false);
+                    }
+                }  
             
             if (file != null) {
                 List<List<Object>> listOfLists;
@@ -234,9 +248,12 @@ public class Minesweeper extends Application {
                 minefield = new Minefield(rows, columns);
                 minefield.open(listOfLists);
                 
+                grid = mineGrid();
+                grid = mineGrid();
+                mainBorderPane.setBottom(grid);
+                    
                 refresh();
-                
-                
+                              
             }
         } catch (Exception ex) {
             Alert alert = new Alert(AlertType.ERROR, ex.toString(), ButtonType.OK);
@@ -260,6 +277,7 @@ public class Minesweeper extends Application {
                     button.setText(String.valueOf(minefield.getMineNeighbour(pos[0], pos[1])));
                 }
                 
+                button.setStyle("-fx-text-fill: #f8f8f2"); 
                 button.setDisable(true);
             }
         }
@@ -366,6 +384,8 @@ public class Minesweeper extends Application {
         
         root.setCenter(fieldPane);
         
+        stage.sizeToScene();
+        //popupStage.setResizable(false);
         popupStage.setScene(scene);
         popupStage.show();
         
@@ -385,15 +405,33 @@ public class Minesweeper extends Application {
                     if (minefield.isMined(pos[0], pos[1])) {
                         button.setText("m");
                     } else {
-                        button.setText(String.valueOf(minefield.getMineNeighbour(pos[0], pos[1])));
+                        int s = minefield.getMineNeighbour(pos[0], pos[1]);
+                        button.setText(String.valueOf(s));
+                        
+                        if (s == 0) {
+                            button.setStyle("-fx-text-fill: #8be9fd"); 
+                        } if (s == 1) {
+                            button.setStyle("-fx-text-fill: #50fa7b"); 
+                        } else if (s == 2) {
+                            button.setStyle("-fx-text-fill: #ffb86c"); 
+                        } else if (s == 3) {
+                            button.setStyle("-fx-text-fill: #bd93f9"); 
+                        } else if (s >= 4) {
+                            button.setStyle("-fx-text-fill: #ff5555"); 
+                        }    
                     }
                 } else if (minefield.isMarked(pos[0], pos[1])) {
-                    button.setText("h");
+                    button.setBackground(Background.EMPTY);
+                    String s = "-fx-background-image: url('" + getClass().getResource("flag.png").toString() + "')";
+                    button.setStyle(s);             
                 } else {
                     button.setText(" ");
+                    //button.setBackground(Background.EMPTY);
                 }
             }
         }
+        
+        stage.sizeToScene();
     }
 
     /**
@@ -427,6 +465,7 @@ public class Minesweeper extends Application {
                                 fail();
                             }
                             minefield.printMinefield();
+                            button.setStyle("-fx-text-fill: #f8f8f2"); 
                             button.setDisable(true);
                         }
                         
@@ -436,7 +475,9 @@ public class Minesweeper extends Application {
                         System.out.printf("Mouse RIGHT clicked cell [%d, %d]%n", p[0], p[1]);
                         
                         if (!minefield.isMarked(p[0], p[1])) {
-                            button.setText("h");
+                            BackgroundImage backgroundImage = new BackgroundImage(new javafx.scene.image.Image(getClass().getResource("flag.png").toString()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+                            Background background = new Background(backgroundImage);
+                            button.setBackground(background);     
                             
                         } else {
                             button.setText(" ");
