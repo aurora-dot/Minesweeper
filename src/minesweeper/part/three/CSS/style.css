@@ -10,13 +10,39 @@
     -fx-background-color: #282a36;
 }
 
-.button {
+.button, button:disabled > * {
     -fx-background-color: #44475a;
     -fx-border-insets: 5px;
     -fx-background-insets: 5px;
     
-    -fx-pref-height: 35px;
-    -fx-pref-width: 35px;
+    -fx-pref-height: 40px;
+    -fx-pref-width: 40px;
     
-    -fx-font: normal bold 15px 'Cousine' 
+    -fx-font: bold 15px 'Cousine';
+    -fx-opacity: 1.0 ;-fx-text-fill: #f8f8f2;
 }
+
+.menu-bar, .menu-item {
+    -fx-background-color: #44475a;
+}
+
+.menu-bar .label, .menu-item {
+    -fx-text-fill: #f8f8f2;
+}
+
+.menu:hover, .menu-item:hover{
+    -fx-background-color:#bd93f9;
+}
+
+.menu-bar .menu-button:hover, .menu-bar .menu-button:focused, .menu-bar .menu-button:showing {
+    -fx-background: #ff79c6 ;
+}
+
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: #44475a;
+    -fx-border-width: 0.2px;
+    -fx-border-color: #ff79c6;
+}
+
+

@@ -73,7 +73,7 @@ public class MinesweeperCMD {
                 // We have incorporated a legality check here, guaranteeing we always use
                 // legal values.  
                 if (legalBounds(c)) {
-                    mines.mark(c.getRow(), c.getColumn());
+                    mines.toggleMark(c.getRow(), c.getColumn());
                 } else {
                     System.out.println("Row " + c.getRow() + " must be 0 or more and less than "
                             + mines.getRows() + " and columns " + c.getColumn()

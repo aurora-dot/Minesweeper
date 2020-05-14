@@ -231,11 +231,11 @@ public class Minefield implements Serializable {
      * @param row
      * @param column
      */
-    public void mark(int row, int column) {
+    public void toggleMark(int row, int column) {
         this.minefield[row][column].toggleMarked();
 
     }
-
+    
     public boolean isMarked(int row, int column) {
         return this.minefield[row][column].isMarked();
     }
@@ -248,6 +248,10 @@ public class Minefield implements Serializable {
         return this.minefield[row][column].isRevealed();
     }
 
+    public void toggleRevealed(int row, int column) {
+        this.minefield[row][column].toggleRevealed();
+    }
+    
     public boolean isMined(int row, int column) {
         return this.minefield[row][column].isMined();
     }
