@@ -40,14 +40,6 @@ public class Minefield implements Serializable {
         }
     }
 
-    public MineTile[][] getMineTiles() {
-        return minefield;
-    }
-
-    public void getMineTiles(MineTile[][] minefield) {
-        minefield = this.minefield;
-    }
-
     /**
      *
      * @return how many rows

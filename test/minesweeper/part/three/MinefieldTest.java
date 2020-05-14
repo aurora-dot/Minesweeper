@@ -79,7 +79,7 @@ public class MinefieldTest {
     @Test
     public void testMark() {
         Minefield mf = new Minefield(4,4);
-        mf.mark(3,3);
+        mf.toggleMark(3,3);
         assertEquals(markedBottomRight,mf.toString());
     }
     
@@ -95,13 +95,13 @@ public class MinefieldTest {
         Minefield mf = new Minefield(4,4);
         mf.mineTile(2,2);
         mf.mineTile(3,3);
-        mf.mark(2,2);
+        mf.toggleMark(2,2);
         assertEquals(false,mf.areAllMinesFound());
-        mf.mark(2,3);
+        mf.toggleMark(2,3);
         assertEquals(false,mf.areAllMinesFound());
-        mf.mark(3,3);
+        mf.toggleMark(3,3);
         assertEquals(false,mf.areAllMinesFound());
-        mf.mark(2,3);
+        mf.toggleMark(2,3);
         assertEquals(true,mf.areAllMinesFound());
                 
     }
