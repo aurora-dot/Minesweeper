@@ -57,3 +57,9 @@ data within.
 
 Max rows is 30 and max column is 60, I didn't figure out how to dynamically change the sizes of the
 buttons without breaking the image inside which breaks the consistancy.
+
+
+--- Debug ---
+I left the debug tools in so if you need to use them you can but they can sometimes be a bit iffy.
+
+Thanks!
