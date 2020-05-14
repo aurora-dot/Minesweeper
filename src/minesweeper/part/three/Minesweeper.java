@@ -392,14 +392,21 @@ public class Minesweeper extends Application {
                     columns = Integer.parseInt(c);
                     mines = Integer.parseInt(m);
 
-                    minefield = new Minefield(rows, columns);
-                    minefield.populate(mines);
+                    if (!(rows > 30 || columns > 60)) {
+                        minefield = new Minefield(rows, columns);
+                        minefield.populate(mines);
 
-                    grid = mineGrid();
-                    mainBorderPane.setCenter(grid);
+                        grid = mineGrid();
+                        mainBorderPane.setCenter(grid);
+                        refresh();
 
-                    popupStage.close();
-
+                        popupStage.close();
+                    
+                    } else {
+                        Alert alert = new Alert(AlertType.ERROR, "Error: Max rows 30, Max columns 60", ButtonType.OK);
+                        alert.showAndWait();
+                    }
+                    
                 } else {
                     Alert alert = new Alert(AlertType.ERROR, "Error: Too many mines", ButtonType.OK);
                     alert.showAndWait();
