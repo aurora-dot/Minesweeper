@@ -69,10 +69,7 @@ public class Minesweeper extends Application {
     private BorderPane mainBorderPane;
     
     @Override
-    public void start(Stage primaryStage) {
-        Scene scene = new Scene(mainBorderPane);
-        scene.getStylesheets().add(getClass().getResource("CSS/style.css").toString());
-                
+    public void start(Stage primaryStage) {   
         this.minefield = new Minefield(rows, columns);
         this.minefield.populate(mines);
         
@@ -86,7 +83,9 @@ public class Minesweeper extends Application {
         grid = mineGrid();
         mainBorderPane.setBottom(grid);
         
-        ;
+        Scene scene = new Scene(mainBorderPane);
+        
+        scene.getStylesheets().add(getClass().getResource("CSS/style.css").toString());
 
         //stage.setResizable(false);
         Image image = new Image(getClass().getResource("Images/mine.png").toString());
@@ -145,6 +144,11 @@ public class Minesweeper extends Application {
         Button hardButton = new Button("Hard");
         Button customButton = new Button("Custom");
         
+        easyButton.setStyle("");
+        mediumButton.setStyle("");
+        hardButton.setStyle("");
+        customButton.setStyle("");
+        
         easyButton.setOnAction(e -> {
             rows = 10;
             columns = 15;
@@ -190,7 +194,6 @@ public class Minesweeper extends Application {
         
         HBox buttonPane = new HBox();
         buttonPane.getChildren().addAll(easyButton, mediumButton, hardButton, customButton);
-        buttonPane.getStylesheets().add(getClass().getResource("CSS/buttonPane.css").toString());
         
         return buttonPane;
     }
