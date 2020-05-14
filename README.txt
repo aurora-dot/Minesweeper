@@ -38,7 +38,7 @@ correct thing to display, a tile which is marked will be accessed before a revea
 --- Altering the grid ---
 
 Left clicking steps from that minetile and right clicking marks the minetile, both are directly
-accessed through the minefield object.
+accessed through the minefield object. Clicking on a mine makes an explosion.
 
 --- Saving ---
 
